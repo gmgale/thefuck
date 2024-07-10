@@ -291,3 +291,9 @@ def test_get_new_management_command(wrong, fixed):
 def test_get_new_management_command_subcommand(wrong, fixed, output):
     command = Command('docker {}'.format(wrong), output)
     assert get_new_command(command) == ['docker {}'.format(x) for x in fixed]
+
+# test the command docker compose-up
+@pytest.mark.usefixtures('no_memoize', 'docker_help')
+def test_match_docker_compose_up():
+    command = Command('docker compose-up', output('compose-up'))
+    assert get_new_command(command) == ['docker compose up']
