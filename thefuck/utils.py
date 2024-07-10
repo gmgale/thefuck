@@ -104,6 +104,12 @@ def get_close_matches(word, possibilities, n=None, cutoff=0.6):
     return difflib_get_close_matches(word, possibilities, n, cutoff)
 
 
+def get_close_matches_with_hyphen(word, possibilities, n=None, cutoff=0.6):
+    if n is None:
+        n = settings.num_close_matches
+    return difflib_get_close_matches(word.replace('-', ' '), possibilities, n, cutoff)
+
+
 def include_path_in_search(path):
     return not any(path.startswith(x) for x in settings.excluded_search_path_prefixes)
 
@@ -166,7 +172,7 @@ def get_all_matched_commands(stderr, separator='Did you mean'):
 
 def replace_command(command, broken, matched):
     """Helper for *_no_command rules."""
-    new_cmds = get_close_matches(broken, matched, cutoff=0.1)
+    new_cmds = get_close_matches(broken, matched, cutoff=1)
     return [replace_argument(command.script, broken, new_cmd.strip())
             for new_cmd in new_cmds]
 
